@@ -2,9 +2,10 @@
 
 import os
 import sys
-# import geopandas as geopd
+import geopandas as geopd
 import pandas as pd
 from dotenv import load_dotenv as env
+from requests import head
 #-------------------------------------------------------------------#
 
 env()   #Load variables from .env file
@@ -18,7 +19,7 @@ def is_considered(row):
     for field in row:
         if not field:
             nVals -= 1
-    #Fetch just records with 80 percent of data
+    #Fetch just records with 80 percent of data or major
     if nVals >= nRecords * 0.8:
         return True
 #-------------------------------------------------------------------#
@@ -29,4 +30,16 @@ for i,n in data.notna().iterrows():
         data.drop(index=i, inplace=True)
     data.fillna(0)
 
-g = (sum(row[-1][4:]) for row in data.iterrows())
+#Generate a tuple with the total sum
+# instead of periodical records
+totalP = (row[2:5] + (sum(row[5:]),) for row in data.itertuples())
+
+heads = list(data.columns[1:4]) #Colnames without ID field
+heads.append("Total")
+#Create an enmpty outcome dataframe
+geoData = pd.DataFrame(columns=heads)
+
+#Fill geoData
+for i,rec in enumerate(totalP):
+    geoData.loc[i] = rec
+
