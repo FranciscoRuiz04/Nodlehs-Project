@@ -3,9 +3,9 @@
 import os
 import sys
 import geopandas as geopd
+import matplotlib.pyplot as plt
 import pandas as pd
 from dotenv import load_dotenv as env
-from requests import head
 #-------------------------------------------------------------------#
 
 env()   #Load variables from .env file
@@ -43,3 +43,10 @@ geoData = pd.DataFrame(columns=heads)
 for i,rec in enumerate(totalP):
     geoData.loc[i] = rec
 
+geo = geopd.read_file(os.getenv('myshp'))
+geoData = geo.merge(geoData, on='Nombre')
+
+if __name__ == '__main__':
+    # geoData.plot()
+    # plt.show()
+    print(geo.crs)
