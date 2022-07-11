@@ -45,8 +45,12 @@ for i,rec in enumerate(totalP):
 
 geo = geopd.read_file(os.getenv('myshp'))
 geoData = geo.merge(geoData, on='Nombre')
+geoSmn = geopd.read_file(os.getenv('smn'))
+geoData.geometry = geoData.geometry.buffer(5000,6)
+
+intersection = geopd.sjoin(geoData, geoSmn, how='left')
+means = (i[1]["Total"].mean() for i in intersection.groupby(["Nombre_left", "Pmean"]))
+
 
 if __name__ == '__main__':
-    # geoData.plot()
-    # plt.show()
-    print(geo.crs)
+    print(next(means))

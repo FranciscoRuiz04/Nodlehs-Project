@@ -10,6 +10,7 @@ fiona = {path = "./geopandas_req/Fiona-1.8.21-cp39-cp39-win_amd64.whl"}
 geopandas = "*"
 python-dotenv = "*"
 matplotlib = "*"
+rtree = "*"
 
 [dev-packages]
 
